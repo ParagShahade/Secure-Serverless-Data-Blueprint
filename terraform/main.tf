@@ -74,7 +74,7 @@ module "gh_wif" {
   pool_display_name     = "GitHub Actions Pool"
   provider_display_name = "GitHub Actions Provider"
 
-  attribute_condition = "assertion.repository == 'ParagShahade/yepoda-case-study' || assertion.repository == 'ParagShahade/yepoda_case_study'"
+  attribute_condition = "assertion.repository == 'ParagShahade/yepoda-assignment'"
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
     "attribute.actor"      = "assertion.actor"
@@ -84,11 +84,7 @@ module "gh_wif" {
   sa_mapping = {
     "pipeline-sa-hyphen" = {
       sa_name   = module.pipeline_sa.id
-      attribute = "attribute.repository/ParagShahade/yepoda-case-study"
-    }
-    "pipeline-sa-underscore" = {
-      sa_name   = module.pipeline_sa.id
-      attribute = "attribute.repository/ParagShahade/yepoda_case_study"
+      attribute = "attribute.repository/ParagShahade/yepoda-assignment"
     }
   }
 }
