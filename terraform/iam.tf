@@ -87,10 +87,3 @@ resource "google_storage_bucket_iam_member" "state_bucket_admin" {
   role   = "roles/storage.objectAdmin"
   member = local.pipeline_sa_iam_email
 }
-
-# Finally, give the service account Owner access for full management during the case study
-resource "google_project_iam_member" "pipeline_owner" {
-  project = var.project_id
-  role    = "roles/owner"
-  member  = local.pipeline_sa_iam_email
-}
