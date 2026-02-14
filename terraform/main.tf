@@ -29,15 +29,21 @@ provider "google-beta" {
 # Enable the Google Cloud APIs we need for this project
 resource "google_project_service" "apis" {
   for_each = toset([
-    "cloudkms.googleapis.com",
-    "vpcaccess.googleapis.com",
-    "compute.googleapis.com",
-    "pubsub.googleapis.com",
-    "secretmanager.googleapis.com",
-    "cloudfunctions.googleapis.com",
-    "run.googleapis.com",
-    "artifactregistry.googleapis.com",
-    "cloudbuild.googleapis.com"
+    "cloudresourcemanager.googleapis.com",  # Required for IAM operations
+    "iam.googleapis.com",                   # Required for service accounts and IAM
+    "cloudkms.googleapis.com",              # Required for encryption keys
+    "vpcaccess.googleapis.com",             # Required for VPC connector
+    "compute.googleapis.com",               # Required for networking
+    "pubsub.googleapis.com",                # Required for Pub/Sub topics
+    "secretmanager.googleapis.com",         # Required for secrets
+    "cloudfunctions.googleapis.com",        # Required for Cloud Functions
+    "run.googleapis.com",                   # Required for Cloud Run (used by Cloud Functions Gen2)
+    "artifactregistry.googleapis.com",      # Required for storing function artifacts
+    "cloudbuild.googleapis.com",            # Required for building functions
+    "bigquery.googleapis.com",              # Required for BigQuery datasets and tables
+    "storage.googleapis.com",               # Required for Cloud Storage buckets
+    "logging.googleapis.com",               # Required for Cloud Logging
+    "monitoring.googleapis.com"             # Required for Cloud Monitoring alerts
   ])
   project = var.project_id
   service = each.key
