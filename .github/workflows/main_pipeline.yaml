@@ -1,0 +1,86 @@
+name: "Yepoda Data Pipeline CI/CD"
+
+# This workflow runs our tests and deploys the infrastructure automatically
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: "Step 1: Run Python Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checking out code"
+        uses: actions/checkout@v4
+
+      - name: "Setting up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: "Installing requirements"
+        run: |
+          cd function
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+
+      - name: "Running the unit tests"
+        env:
+          PROJECT_ID: "test-project"
+          RAW_BUCKET: "test-raw"
+          PROCESSED_BUCKET: "test-processed"
+          BQ_DATASET: "test-dataset"
+          BQ_TABLE: "test-table"
+        run: |
+          cd function
+          python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=term
+
+  terraform:
+    name: "Step 2: Deploy Infrastructure"
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - name: "Checking out code"
+        uses: actions/checkout@v4
+
+      - name: "Logging in to Google Cloud"
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: "Getting Terraform ready"
+        uses: hashicorp/setup-terraform@v3
+
+      - name: "Initializing Terraform"
+        run: terraform init
+
+      - name: "Planning the changes"
+        run: terraform plan
+        env:
+          TF_VAR_pii_salt_value: ${{ secrets.PII_SALT_VALUE }}
+
+      - name: "Actually applying the changes (Main branch only)"
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_pii_salt_value: ${{ secrets.PII_SALT_VALUE }}
+
+      - name: "All done!"
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "###Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "Your live Webhook URL is: $(terraform output -raw webhook_uri)" >> $GITHUB_STEP_SUMMARY
