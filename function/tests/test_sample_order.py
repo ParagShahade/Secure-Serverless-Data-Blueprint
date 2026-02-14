@@ -17,9 +17,9 @@ class TestSampleOrder(unittest.TestCase):
     """
 
     def setUp(self):
-        # Path to the sample_order.json in the project root
+        # Path to the sample_order.json in the function directory
         self.json_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
             "sample_order.json"
         )
         
