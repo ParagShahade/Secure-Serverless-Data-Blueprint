@@ -82,7 +82,7 @@ module "gh_wif" {
   }
 
   sa_mapping = {
-    "pipeline-sa-hyphen" = {
+    "pipeline-sa" = {
       sa_name   = module.pipeline_sa.id
       attribute = "attribute.repository/ParagShahade/yepoda-assignment"
     }
