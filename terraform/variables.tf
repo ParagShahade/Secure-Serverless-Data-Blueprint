@@ -13,7 +13,7 @@ variable "region" {
 variable "location" {
   description = "The multi-region or region location for buckets and datasets"
   type        = string
-  default     = "EU"
+  default     = "europe-west3"
 }
 
 variable "environment" {
@@ -82,7 +82,7 @@ variable "bq_table_expiration_ms" {
 variable "bq_labels" {
   description = "BigQuery Dataset Labels"
   type        = map(string)
-  default     = {
+  default = {
     env        = "production"
     compliance = "gdpr"
   }
