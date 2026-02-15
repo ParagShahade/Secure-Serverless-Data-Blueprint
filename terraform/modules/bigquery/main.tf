@@ -6,6 +6,13 @@ resource "google_bigquery_dataset" "dataset" {
   default_table_expiration_ms = var.default_table_expiration_ms
   project                     = var.project_id
   labels                      = var.labels
+
+  dynamic "default_encryption_configuration" {
+    for_each = var.kms_key_name != null ? [1] : []
+    content {
+      kms_key_name = var.kms_key_name
+    }
+  }
 }
 
 resource "google_bigquery_table" "tables" {
@@ -15,5 +22,12 @@ resource "google_bigquery_table" "tables" {
   table_id            = each.key
   project             = var.project_id
   schema              = each.value.schema
-  deletion_protection = false
+  deletion_protection = true
+
+  dynamic "encryption_configuration" {
+    for_each = var.kms_key_name != null ? [1] : []
+    content {
+      kms_key_name = var.kms_key_name
+    }
+  }
 }

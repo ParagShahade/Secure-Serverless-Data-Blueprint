@@ -44,3 +44,9 @@ variable "tables" {
   }))
   default = {}
 }
+
+variable "kms_key_name" {
+  description = "The KMS key name to encrypt the dataset and tables."
+  type        = string
+  default     = null
+}

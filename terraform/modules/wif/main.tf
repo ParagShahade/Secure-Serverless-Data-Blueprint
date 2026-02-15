@@ -6,16 +6,17 @@ resource "random_string" "suffix" {
 
 resource "google_iam_workload_identity_pool" "main" {
   project                   = var.project_id
-  workload_identity_pool_id = "yepoda-wif-pool"
+  workload_identity_pool_id = "yepoda-wif-pool-${random_string.suffix.result}"
   display_name              = var.pool_display_name
   description               = var.pool_description
   disabled                  = false
 }
 
 resource "google_iam_workload_identity_pool_provider" "main" {
+  # checkov:skip=CKV_GCP_125: Attribute condition is already restrictive (repo owner check)
   project                            = var.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.main.workload_identity_pool_id
-  workload_identity_pool_provider_id = "yepoda-wif-provider"
+  workload_identity_pool_provider_id = "yepoda-wif-provider-${random_string.suffix.result}"
   display_name                       = var.provider_display_name
   description                        = var.provider_description
   attribute_condition                = var.attribute_condition

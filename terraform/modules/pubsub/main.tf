@@ -13,8 +13,9 @@ resource "google_pubsub_topic" "topic" {
 }
 
 resource "google_pubsub_topic" "dead_letter" {
-  name    = var.dead_letter_topic_name
-  project = var.project_id
+  name         = var.dead_letter_topic_name
+  project      = var.project_id
+  kms_key_name = var.kms_key_name
 }
 
 resource "google_pubsub_subscription" "dead_letter_persistence" {

@@ -10,6 +10,8 @@ module "bigquery" {
 
   labels = merge(var.bq_labels, local.common_labels)
 
+  kms_key_name = google_kms_crypto_key.storage_key.id
+
   tables = {
     (var.bq_table_name) = {
       schema = <<EOF

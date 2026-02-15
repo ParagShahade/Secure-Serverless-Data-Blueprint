@@ -20,6 +20,10 @@ resource "google_kms_crypto_key" "storage_key" {
   name            = "storage-key"
   key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "7776000s" # 90 days
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Encryption key for securing our messages in Pub/Sub
@@ -27,6 +31,10 @@ resource "google_kms_crypto_key" "pubsub_key" {
   name            = "pubsub-key"
   key_ring        = google_kms_key_ring.key_ring.id
   rotation_period = "7776000s" # 90 days
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Give Google Cloud permission to use our keys for storage and messages
