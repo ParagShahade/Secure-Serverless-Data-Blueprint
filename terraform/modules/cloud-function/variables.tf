@@ -106,9 +106,3 @@ variable "labels" {
   type        = map(string)
   default     = {}
 }
-
-variable "ingress_settings" {
-  description = "Ingress settings for the function"
-  type        = string
-  default     = "ALLOW_INTERNAL_AND_GCLB"
-}

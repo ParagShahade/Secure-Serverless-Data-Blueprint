@@ -42,7 +42,7 @@ resource "google_cloudfunctions2_function" "function" {
 
   service_config {
     # checkov:skip=CKV_GCP_124: Redundantly flagged, but internal access is already configured via ingress settings
-    ingress_settings      = var.ingress_settings
+    ingress_settings      = var.function_name == "yepoda-webhook-receiver" ? "ALLOW_ALL" : "ALLOW_INTERNAL_AND_GCLB"
     service_account_email = module.service_account.email
     timeout_seconds       = var.timeout_seconds
     available_memory      = var.available_memory
