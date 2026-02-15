@@ -50,3 +50,9 @@ variable "kms_key_name" {
   type        = string
   default     = null
 }
+
+variable "deletion_protection" {
+  description = "Whether to protect the table from deletion."
+  type        = bool
+  default     = true
+}
