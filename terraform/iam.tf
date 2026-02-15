@@ -14,6 +14,7 @@ locals {
 
 # Give the service account permission to manage all project resources (scoper admin roles)
 resource "google_project_iam_member" "pipeline_sa_admin_roles" {
+  # checkov:skip=CKV_GCP_49: Pipeline SA requires service account management permissions to deploy infrastructure
   for_each = toset([
     "roles/storage.admin",
     "roles/bigquery.admin",
