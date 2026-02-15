@@ -11,7 +11,6 @@ module "bigquery" {
   labels = merge(var.bq_labels, local.common_labels)
 
   kms_key_name = google_kms_crypto_key.storage_key.id
-  deletion_protection = false
 
   depends_on = [
     google_kms_crypto_key_iam_member.bq_key_binding
