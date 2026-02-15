@@ -10,7 +10,9 @@ module "bigquery" {
 
   labels = merge(var.bq_labels, local.common_labels)
 
-  kms_key_name = google_kms_crypto_key.storage_key.id
+  depends_on = [
+    google_kms_crypto_key_iam_member.bq_key_binding
+  ]
 
   tables = {
     (var.bq_table_name) = {
