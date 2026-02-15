@@ -1,31 +1,29 @@
-# GDPR Compliance Report: Yepoda Data Pipeline
 
-## Executive Summary
-The Yepoda Data Pipeline is a purpose-built infrastructure designed to handle sensitive e-commerce order data with a "Security-First" and "Privacy by Design" mindset. In compliance with General Data Protection Regulation (GDPR) standards, this report details the technical and organizational measures implemented to protect customer Personnel Identifiable Information (PII).
+# GDPR Compliance Strategy & Security Posture
 
-## Data Pseudonymization & Hashing
-The core technical control for GDPR compliance is the **pseudonymization** of sensitive data fields. 
-- **Cryptographic Hashing**: PII fields (Email, Name, Address) are never stored in their raw form in the analytics layer. Instead, they are transformed using the **SHA-256** hashing algorithm.
-- **Salted Security**: To prevent dictionary or rainbow table attacks, a high-entropy "salt" is appended to the data prior to hashing. This salt is managed via **Google Secret Manager**, ensuring that only authorized services can access the cryptographic material.
-- **Deterministic Tokenization**: This approach allows for deterministic analytics (identifying repeat customers) without ever exposing the individual's actual identity to the database users or analytics dashboards.
+## 1. Introduction: Privacy by Design
+The Yepoda Data Pipeline was built on a foundational philosophy of "Privacy by Design." My goal wasn't just to check regulatory boxes, but to architect a system where user privacy is the default state. The design centers on **Data Minimization**, **Purpose Limitation**, and ensuring **Integrity & Confidentiality** at every step. This document breaks down the specific technical decisions made to secure customer PII throughout its lifecycle.
 
-## Storage Isolation & Data Minimization
-Data is strictly partitioned based on its sensitivity and lifecycle requirements:
-- **Landing Zone (Raw Data)**: Original payloads containing PII are stored in an isolated, encrypted Google Cloud Storage (GCS) bucket. Access is restricted to the Processing Function only.
-- **Analytics Zone (Processed Data)**: Only the anonymized records are propagated to the final BigQuery dataset and the Processed GCS bucket. 
-- **Principle of Minimization**: The pipeline discards unnecessary PII metadata (like full payment details) at the ingestion point, ensuring we only store what is strictly necessary for legitimate business operations.
+## 2. PII Handling & Pseudonymization
+One of the biggest challenges was protecting direct identifiers (Name, Email, Address) while still enabling valuable analytics. Rather than simple masking, I chose a robust **Pseudonymization** strategy.
 
-## Retention & Automatic Deletion Policies
-Automated Lifecycle Policies ensure data is not kept longer than necessary:
-- **Ephemeral Storage**: Raw PII is purged after **7 days**, minimizing the impact of potential security incidents.
-- **Processed Retention**: Anonymized records are retained for **1 year** for trend analysis, then automatically deleted.
+*   **Why Salted Hashing?** Storing raw PII is too risky. Instead, identifiers are transformed using SHA-256 cryptographic hashing. This allows for deterministic analytics like tracking repeat customers without ever exposing their actual identity in the data warehouse.
+*   **The "Salt" Decision:** Standard hashes are vulnerable to rainbow table attacks. To mitigate this, a high-entropy "Salt" is appended to every email before hashing. This salt is locked away in **Google Secret Manager**, ensuring that even if the database were leaked, the hashes would remain irreversible.
+*   **Separation of Duties:** By isolating the salt from the analytics team, we create a cryptographic barrier. The data tells us *what* happened, without revealing *who* did it.
 
-## Google Cloud Security Best Practices
-The implementation adheres to the following GCP security pillars:
-- **CMEK (Customer-Managed Encryption Keys)**: All data at rest in GCS, Pub/Sub, and BigQuery is protected by keys managed in **Cloud KMS**. We implemented 90-day rotation periods for these keys to enhance security posture.
-- **IAM Least Privilege**: Each component (Webhook, Processor, Pub/Sub) operates under a dedicated Identity and Access Management (IAM) Service Account with only the specific roles required for its function (e.g., `storage.objectCreator`).
-- **Private Networking**: Data transit between the Cloud Functions and other GCP services occurs over a **Private VPC network** via Serverless VPC Connectors. This ensures that PII data never traverses the public internet once it enters the Google network.
-- **Auditability**: **Cloud Audit Logs** are enabled project-wide, providing an immutable trail of every access attempt to sensitive data. This ensures full transparency for compliance audits.
+## 3. Data Minimization & Retention
+Following GDPR Article 5(1)(c), the system is designed to "forget" data as soon as it's no longer needed.
 
-## Conclusion
-By integrating robust pseudonymization, granular access controls, and automated data lifecycle management, the Yepoda Data Pipeline provides a state-of-the-art framework for secure e-commerce data processing that meets the highest standards of data privacy and GDPR compliance.
+*   **Raw Data (7-Day Limit):** Original JSON payloads containing PII are stored in an encrypted GCS bucket solely for disaster recovery. An automated Lifecycle Policy permanently deletes these files after **7 days**, drastically reducing the attack surface.
+*   **Processed Data:** Anonymized records are retained for historical trend analysis. Since this data carries low re-identification risk, it is kept longer to support legitimate business insights.
+
+## 4. Security Controls & Infrastructure
+The architecture employs a "Defense in Depth" model, layering multiple security controls to protect the pipeline:
+
+*   **Encryption (CMEK):** Relying solely on platform-managed keys felt insufficient for sensitive data. I implemented **Customer-Managed Encryption Keys (CMEK)** via Cloud KMS, ensuring we retain full control over data access.
+*   **Network Isolation:** To prevent data exfiltration, the Cloud Functions operate within a private network via a **Serverless VPC Access Connector**. This ensures sensitive traffic never touches the public internet.
+*   **Least Privilege (IAM):** Every component has a dedicated identity. For instance, the Webhook function can *write* to Pub/Sub but cannot *read* from it. This granular permission model minimizes the blast radius of any potential compromise.
+*   **Secure CI/CD:** Deployment is automated using **Workload Identity Federation (WIF)**, eliminating the need for risky, long-lived service account keys.
+
+## 5. Conclusion
+By integrating cryptographic pseudonymization, strict retention schedules, and military-grade encryption, the pipeline demonstrates a mature approach to data privacy. It’s not just about compliance; it’s about building a resilient system that respects and protects user data by design.

@@ -1,12 +1,8 @@
 name: "Yepoda Data Pipeline CI/CD"
 
-# This workflow runs our tests and deploys the infrastructure automatically
+# This workflow runs our tests and deploys the infrastructure manually
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}
@@ -96,13 +92,13 @@ jobs:
           TF_VAR_pii_salt_value: ${{ secrets.PII_SALT_VALUE }}
 
       - name: "Actually applying the changes (Main branch only)"
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
         env:
           TF_VAR_pii_salt_value: ${{ secrets.PII_SALT_VALUE }}
 
       - name: "All done!"
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           echo "### Deployment Successful" >> $GITHUB_STEP_SUMMARY
           echo "Your live Webhook URL is: $(terraform output -raw webhook_uri)" >> $GITHUB_STEP_SUMMARY
