@@ -33,7 +33,7 @@ variable "owner" {
 variable "raw_bucket_name" {
   description = "Name of the GCS bucket for raw data"
   type        = string
-  default     = "yepoda-raw-orders"
+  default     = "raw-orders-bucket"
 }
 
 variable "raw_bucket_age" {
@@ -45,7 +45,7 @@ variable "raw_bucket_age" {
 variable "processed_bucket_name" {
   description = "Name of the GCS bucket for processed data"
   type        = string
-  default     = "yepoda-processed-orders"
+  default     = "processed-orders-bucket"
 }
 
 variable "processed_bucket_age" {
@@ -110,20 +110,20 @@ variable "function_runtime" {
 variable "sa_account_id" {
   description = "Service Account ID"
   type        = string
-  default     = "yepoda-pipeline-sa"
+  default     = "pipeline-sa"
 }
 
 variable "sa_display_name" {
   description = "Service Account Display Name"
   type        = string
-  default     = "Yepoda Pipeline Service Account"
+  default     = "Data Pipeline Service Account"
 }
 
 # Secret Variables
 variable "pii_salt_secret_id" {
   description = "Secret ID for PII Salt"
   type        = string
-  default     = "yepoda-pii-salt"
+  default     = "pii-salt-secret"
 }
 
 variable "pii_salt_value" {
@@ -136,13 +136,13 @@ variable "pii_salt_value" {
 variable "vpc_network_name" {
   description = "Name of the VPC network"
   type        = string
-  default     = "yepoda-vpc"
+  default     = "main-vpc"
 }
 
 variable "vpc_subnet_name" {
   description = "Name of the VPC subnet"
   type        = string
-  default     = "yepoda-subnet"
+  default     = "main-subnet"
 }
 
 variable "vpc_subnet_cidr" {
@@ -154,7 +154,7 @@ variable "vpc_subnet_cidr" {
 variable "vpc_connector_name" {
   description = "Name of the VPC Access Connector"
   type        = string
-  default     = "yepoda-connector"
+  default     = "vpc-connector"
 }
 
 variable "vpc_connector_machine_type" {
@@ -191,18 +191,18 @@ variable "pubsub_max_delivery_attempts" {
 variable "pubsub_topic_name" {
   description = "The name of the main Pub/Sub topic"
   type        = string
-  default     = "yepoda-orders"
+  default     = "orders-topic"
 }
 
 variable "pubsub_dead_letter_topic_name" {
   description = "The name of the Pub/Sub dead letter topic"
   type        = string
-  default     = "yepoda-orders-dlq"
+  default     = "orders-dlq-topic"
 }
 
 variable "pubsub_subscription_name" {
   description = "The name of the Pub/Sub subscription"
   type        = string
-  default     = "yepoda-order-processor-sub"
+  default     = "order-processor-sub"
 }
 

@@ -1,7 +1,7 @@
 
 # Cost Estimation for running this infrastructure
 
-**Project:** Yepoda Data Pipeline
+**Project:** Data Pipeline
 **Region:** `europe-west3` (Frankfurt)
 **Estimated Monthly Cost:** **~€20.90**
 

@@ -8,7 +8,7 @@ module "webhook_receiver" {
   source = "./modules/cloud-function"
 
   project_id    = var.project_id
-  function_name = "yepoda-webhook-receiver"
+  function_name = "webhook-receiver"
   description   = "Receives orders and publishes to Pub/Sub"
   region        = var.region
 
@@ -37,7 +37,7 @@ module "order_processor" {
   source = "./modules/cloud-function"
 
   project_id    = var.project_id
-  function_name = "yepoda-order-processor"
+  function_name = "order-processor"
   description   = "Processes and anonymizes order data"
   region        = var.region
 
@@ -59,7 +59,7 @@ module "order_processor" {
     BQ_TABLE         = module.bigquery.table_ids[var.bq_table_name]
   }
 
-  invoker_members = ["serviceAccount:sa-cf-yepoda-order-processor@${var.project_id}.iam.gserviceaccount.com"]
+  invoker_members = ["serviceAccount:sa-cf-order-processor@${var.project_id}.iam.gserviceaccount.com"]
 
   secret_environment_variables = [
     {

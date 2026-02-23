@@ -1,6 +1,6 @@
 # GCP Services Documentation & Justifications
 
-The Yepoda Data Pipeline leverages a suite of Google Cloud services, selected for their scalability, security, and alignment with modern cloud-native practices.
+The Data Pipeline leverages a suite of Google Cloud services, selected for their scalability, security, and alignment with modern cloud-native practices.
 
 | Service | Purpose | Justification |
 | :--- | :--- | :--- |

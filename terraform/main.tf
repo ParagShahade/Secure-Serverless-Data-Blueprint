@@ -80,7 +80,7 @@ module "gh_wif" {
   pool_display_name     = "GitHub Actions Pool"
   provider_display_name = "GitHub Actions Provider"
 
-  attribute_condition = "assertion.repository == 'ParagShahade/yepoda-assignment'"
+  attribute_condition = "assertion.repository == 'your-org/your-repo'"
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
     "attribute.actor"      = "assertion.actor"
@@ -90,7 +90,7 @@ module "gh_wif" {
   sa_mapping = {
     "pipeline-sa" = {
       sa_name   = module.pipeline_sa.id
-      attribute = "attribute.repository/ParagShahade/yepoda-assignment"
+      attribute = "attribute.repository/your-org/your-repo"
     }
   }
 }

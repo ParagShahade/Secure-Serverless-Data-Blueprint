@@ -1,8 +1,8 @@
 locals {
-  project_prefix = "yepoda"
+  project_prefix = "data-pipeline"
 
   common_labels = {
-    project     = "yepoda-data-pipeline"
+    project     = "generic-data-pipeline"
     managed_by  = "terraform"
     environment = var.environment
     owner       = var.owner

@@ -2,7 +2,7 @@
 # GDPR Compliance Strategy & Security Posture
 
 ## 1. Introduction: Privacy by Design
-The Yepoda Data Pipeline was built on a foundational philosophy of "Privacy by Design." My goal wasn't just to check regulatory boxes, but to architect a system where user privacy is the default state. The design centers on **Data Minimization**, **Purpose Limitation**, and ensuring **Integrity & Confidentiality** at every step. This document breaks down the specific technical decisions made to secure customer PII throughout its lifecycle.
+The Standard Data Pipeline was built on a foundational philosophy of "Privacy by Design." My goal wasn't just to check regulatory boxes, but to architect a system where user privacy is the default state. The design centers on **Data Minimization**, **Purpose Limitation**, and ensuring **Integrity & Confidentiality** at every step. This document breaks down the specific technical decisions made to secure customer PII throughout its lifecycle.
 
 ## 2. PII Handling & Pseudonymization
 One of the biggest challenges was protecting direct identifiers (Name, Email, Address) while still enabling valuable analytics. Rather than simple masking, I chose a robust **Pseudonymization** strategy.
