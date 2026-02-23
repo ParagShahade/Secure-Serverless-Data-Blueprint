@@ -183,15 +183,9 @@ Ensure you have `pre-commit` installed, then run:
 ![Webhook Trigger](docs/test-webhook.png)  
 *(Successful reception of sample order payload)*
 
-**Raw Data Ingestion (GCS):**
-![Raw Bucket](docs/raw_data_bucket.png)  
-*(Encrypted JSON payload stored in raw bucket)*
-
-**Processed Data Output (GCS):**
-![Processed Bucket](docs/processed_bucket_output.png)  
-*(Anonymized data stored in processed bucket)*
 
 **BigQuery Analytics Table:**
 ![BigQuery Table](docs/bq_table.png)  
 *(Final anonymized record in BigQuery, ready for analysis)*
+
 
